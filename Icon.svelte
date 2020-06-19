@@ -1,4 +1,6 @@
 <script>
+  const domParser = new DOMParser();
+
   export let data = ''
   export let viewBox = '0 0 20 20'
   
@@ -10,9 +12,13 @@
   export let stroke = color
   export let fill = color
 
-  $: elements = data
-    .replace(/<svg ([^>]*)>/, '')
-    .replace('</svg>', '')
+  let elements;
+
+  $: {
+    const svgDom = domParser.parseFromString(data, 'image/svg+xml').firstChild;
+    viewBox = svgDom.getAttribute('viewBox');
+    elements = svgDom.innerHTML;
+  }
 </script>
 
 <svg
